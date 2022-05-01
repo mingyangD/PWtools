@@ -172,7 +172,7 @@ parser.add_argument('-cs', "--cir_seq", help='Please enter the circRNA sequence 
 parser.add_argument('-cg', "--cir_gip", help='Please enter the circRNA GIP kernel similarity file with a label')
 parser.add_argument('-pf', "--phe_fun", help='Please enter the phenotype function similarity file with a label')
 parser.add_argument('-pg', "--phe_gip", help='Please enter the phenotype GIP kernel similarity file with a label')
-parser.add_argument('-o', "--out_folder", help='Please enter the out folder path; /rank')
+# parser.add_argument('-o', "--out_folder", help='Please enter the out folder path; /rank')
 parser.add_argument('-t', "--num_threads", help='Please enter the number of num_threads', default=4)
 
 
@@ -182,7 +182,7 @@ cir_seq_sim_path = args.cir_seq
 cir_gip_sim_path = args.cir_gip
 phe_fun_sim_path = args.phe_fun
 phe_gip_sim_path = args.phe_gip
-out_path = args.out_folder
+# out_path = args.out_folder
 num_threads = args.num_threads
 num_threads = int(num_threads)
 
@@ -213,7 +213,7 @@ all_network = construct_net.build_net(f_cir_seq, f_cir_GIP, 0.3, f_pheno_fun, f_
                                       association_change)
 
 def func(phe):
-    fp = open(out_path + f'/{phe}', 'w')
+    fp = open('./rank/{phe}', 'w')
     temp_list = []
     for one_test in leave_neg_ndarray:
         value1 = one_test[0]
@@ -221,17 +221,18 @@ def func(phe):
         if value2 == phe:
             allpath = DFS3(all_network, value1, value2, path=[])
             score_allpath = value_sum(all_network, allpath)
-            temp_list.append([value1, value2, score_allpath])
-    temp_list.sort(key=lambda x: temp_list[2], reverse=True)
+            temp_list.append([value1,score_allpath])
+    temp_list.sort(key=lambda x: x[1], reverse=True)
     temp_list = temp_list[0:100]
     for l in temp_list:
+        l = [str(i) for i in l]
         hang = '\t'.join(l) + '\n'
         fp.write(hang)
     fp.close()
 
 
 if __name__=='__main__':
-    pool = Pool(num_threads) #创建一个5个进程的进程池
+    pool = Pool(num_threads) #创建一个num_threads个进程的进程池
 
     for phe in phe_name_list:
         print(phe)
