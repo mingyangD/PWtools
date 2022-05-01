@@ -213,7 +213,7 @@ all_network = construct_net.build_net(f_cir_seq, f_cir_GIP, 0.3, f_pheno_fun, f_
                                       association_change)
 
 def func(phe):
-    fp = open('./rank/{phe}', 'w')
+    fp = open(f'./rank/{phe}', 'w')
     temp_list = []
     for one_test in leave_neg_ndarray:
         value1 = one_test[0]
@@ -228,6 +228,7 @@ def func(phe):
         l = [str(i) for i in l]
         hang = '\t'.join(l) + '\n'
         fp.write(hang)
+        print(phe, '文件已经写入完成')
     fp.close()
 
 
